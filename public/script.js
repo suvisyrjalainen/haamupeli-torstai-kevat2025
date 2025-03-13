@@ -53,3 +53,7 @@ function drawBoard(board){
     }
 }
 
+function getCell(board, x, y) {
+    return board[y][x];
+}
+
