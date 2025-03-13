@@ -8,6 +8,7 @@ function startGame(){
     document.getElementById('game-screen').style.display = 'block';
     board = generateRandomBoard();
     console.log(board);
+    drawBoard(board);
 }
 
 
@@ -30,3 +31,25 @@ function generateRandomBoard() {
     
     return newBoard;
 }
+
+function drawBoard(board){
+    const gameBoard = document.getElementById('game-board');
+    // Tämä luo CSS Grid -ruudukon, jossa on BOARD_SIZE saraketta. 
+    // Jokainen sarake saa saman leveyden (1fr).
+    gameBoard.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
+
+    for (let y = 0; y < BOARD_SIZE; y++) {
+        for (let x = 0; x < BOARD_SIZE; x++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+
+            if (getCell(board, x, y) === 'W') {
+                cell.classList.add('wall'); // 'W' on seinä
+            }
+
+            gameBoard.appendChild(cell);
+        }
+        
+    }
+}
+
