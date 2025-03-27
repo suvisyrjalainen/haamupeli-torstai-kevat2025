@@ -11,7 +11,7 @@ function startGame(){
     board = generateRandomBoard();
     console.log(board);
 
-    generateObstacles(board);
+   
 
     drawBoard(board);
 }
@@ -33,6 +33,11 @@ function generateRandomBoard() {
      }
     }
     
+    generateObstacles(newBoard);
+
+    [playerX, playerY] = randomEmptyPosition(newBoard);
+
+    newBoard[playerY][playerX] = "P";
     
     return newBoard;
 }
@@ -52,6 +57,9 @@ function drawBoard(board){
 
             if (getCell(board, x, y) === 'W') {
                 cell.classList.add('wall'); // 'W' on seinä
+            }
+            else if (getCell(board, x, y) === 'P') {
+                cell.classList.add('player'); // 'P' on pelaaja
             }
 
             gameBoard.appendChild(cell);
@@ -100,4 +108,22 @@ function placeObstacle(board,obstacle,startX, startY){
         [x,y] = coordinatePair;
         board[startY + y][startX + x] = 'W';
     }
+}
+
+
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+
+
+function randomEmptyPosition(board) {
+  x = randomInt(1, BOARD_SIZE - 2);
+  y = randomInt(1, BOARD_SIZE - 2);
+  if (board[y][x] === ' ') {
+      return [x, y];
+  } else {
+      return randomEmptyPosition(board);
+  }
 }
