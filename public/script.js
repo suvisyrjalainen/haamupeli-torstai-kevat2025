@@ -3,6 +3,28 @@ let board; //kenttä tallennetaan tähän
 
 const cellSize = calculateCellSize();
 
+let player;
+let playerX;
+let playerY;
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+      case 'ArrowUp':
+      player.move(0, -1); // Liikuta ylös
+      break;
+      case 'ArrowDown':
+      player.move(0, 1); // Liikuta alas
+      break;
+      case 'ArrowLeft':
+      player.move(-1, 0); // Liikuta vasemmalle
+     break;
+      case 'ArrowRight':
+      player.move(1, 0); // Liikuta oikealle
+      break;
+      }
+     event.preventDefault(); // Prevent default scrolling behaviour
+     });
+
 function startGame(){
     console.log("Peli aloitettu");
 
@@ -37,7 +59,9 @@ function generateRandomBoard() {
 
     [playerX, playerY] = randomEmptyPosition(newBoard);
 
-    newBoard[playerY][playerX] = "P";
+    player = new Player(playerX, playerY);
+
+    newBoard[player.Y][player.X] = "P";
     
     return newBoard;
 }
@@ -126,4 +150,36 @@ function randomEmptyPosition(board) {
   } else {
       return randomEmptyPosition(board);
   }
+}
+
+
+class Player{
+    constructor(x,y){
+        this.X = x;
+        this.Y = y;
+    }
+    move(dx, dy){
+
+        const currentX = this.X;
+        const currentY = this.Y;
+        
+
+       // Laske uusi sijainti
+       // const newX = currentX + deltaX;
+       const newY = currentY + dy;
+       const newX = currentX + dx;
+
+
+
+     // Päivitä pelaajan sijainti
+     this.X = newX;
+     this.Y = newY;
+
+    // Päivitä pelikenttä
+    board[currentY][currentX] = ' '; // Tyhjennetään vanha paikka
+    board[newY][newX] = 'P'; // Asetetaan uusi paikka
+
+    drawBoard(board);
+    }
+
 }
