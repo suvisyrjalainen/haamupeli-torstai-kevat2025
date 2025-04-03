@@ -7,6 +7,8 @@ let player;
 let playerX;
 let playerY;
 
+let ghosts = [];
+
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
       case 'ArrowUp':
@@ -54,6 +56,17 @@ function generateRandomBoard() {
       }
      }
     }
+
+    ghosts = [];
+
+    for(let i=0; i < 8; i++){
+        const [ghostX, ghostY] = randomEmptyPosition(newBoard);
+        setCell(newBoard, ghostX, ghostY, 'H');
+        ghosts.push(new Ghost(ghostX,ghostY)) // lisää haamut lisalle
+       
+    }
+    
+    console.log(ghosts);
     
     generateObstacles(newBoard);
 
@@ -71,6 +84,8 @@ function drawBoard(board){
     // Tämä luo CSS Grid -ruudukon, jossa on BOARD_SIZE saraketta. 
     // Jokainen sarake saa saman leveyden (1fr).
     gameBoard.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
+
+    gameBoard.innerHTML = ' ';
 
     for (let y = 0; y < BOARD_SIZE; y++) {
         for (let x = 0; x < BOARD_SIZE; x++) {
@@ -94,6 +109,10 @@ function drawBoard(board){
 
 function getCell(board, x, y) {
     return board[y][x];
+}
+
+function setCell(board, x, y, value){
+    board[y][x] = value; 
 }
 
 
@@ -158,6 +177,7 @@ class Player{
         this.X = x;
         this.Y = y;
     }
+
     move(dx, dy){
 
         const currentX = this.X;
@@ -170,6 +190,7 @@ class Player{
        const newX = currentX + dx;
 
 
+    if (getCell(board, newX, newY)=== ' '){ 
 
      // Päivitä pelaajan sijainti
      this.X = newX;
@@ -179,7 +200,16 @@ class Player{
     board[currentY][currentX] = ' '; // Tyhjennetään vanha paikka
     board[newY][newX] = 'P'; // Asetetaan uusi paikka
 
-    drawBoard(board);
     }
 
+    drawBoard(board);
+
+    }
+}
+
+class Ghost {
+    constructor(x,y){
+        this.X = x;
+        this.Y = y;
+    }
 }
