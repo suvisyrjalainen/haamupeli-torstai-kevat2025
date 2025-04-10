@@ -9,6 +9,8 @@ let playerY;
 
 let ghosts = [];
 
+
+
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
       case 'ArrowUp':
@@ -27,7 +29,7 @@ document.addEventListener('keydown', (event) => {
      event.preventDefault(); // Prevent default scrolling behaviour
      });
 
-function startGame(){
+    function startGame(){
     console.log("Peli aloitettu");
 
     document.getElementById('intro-screen').style.display = 'none';
@@ -35,10 +37,8 @@ function startGame(){
     board = generateRandomBoard();
     console.log(board);
 
-   
-
     drawBoard(board);
-}
+    }
 
 
 
@@ -62,12 +62,11 @@ function generateRandomBoard() {
     for(let i=0; i < 8; i++){
         const [ghostX, ghostY] = randomEmptyPosition(newBoard);
         setCell(newBoard, ghostX, ghostY, 'H');
-        ghosts.push(new Ghost(ghostX,ghostY)) // lisää haamut lisalle
-       
+        ghosts.push(new Ghost(ghostX,ghostY)) // lisää haamut lisalle 
     }
     
     console.log(ghosts);
-    
+
     generateObstacles(newBoard);
 
     [playerX, playerY] = randomEmptyPosition(newBoard);
@@ -75,6 +74,8 @@ function generateRandomBoard() {
     player = new Player(playerX, playerY);
 
     newBoard[player.Y][player.X] = "P";
+
+    setCell(newBoard, 5, 5, "B")
     
     return newBoard;
 }
@@ -100,6 +101,13 @@ function drawBoard(board){
             else if (getCell(board, x, y) === 'P') {
                 cell.classList.add('player'); // 'P' on pelaaja
             }
+            else if (getCell(board, x, y) === 'H') {
+                cell.classList.add('ghost'); // 'H' on haamu
+            }
+            else if (getCell(board, x, y) === 'B') {
+                cell.classList.add('bullet'); // 'B´on bullet
+            }
+
 
             gameBoard.appendChild(cell);
         }

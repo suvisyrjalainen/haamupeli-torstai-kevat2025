@@ -52,3 +52,13 @@ button{
     background-image: url("images/player.png");
     background-size: cover;
 }
+
+.ghost{
+    background-image: url("images/hornmonster.png");
+    background-size: cover;
+}
+
+.bullet{
+    background-color: chocolate;
+    border-radius: 50%;
+}
