@@ -21,11 +21,25 @@ document.addEventListener('keydown', (event) => {
       break;
       case 'ArrowLeft':
       player.move(-1, 0); // Liikuta vasemmalle
-     break;
+      break;
       case 'ArrowRight':
       player.move(1, 0); // Liikuta oikealle
       break;
+      case 'w':
+        shootAt(player.X, player.Y - 1);
+      break;
+      case 's':
+        shootAt(player.X, player.Y + 1);
+      break;
+      case 'a':
+        shootAt(player.X - 1, player.Y);
+      break;
+      case 'd':
+        shootAt(player.X + 1, player.Y);
+      break;
+      
       }
+
      event.preventDefault(); // Prevent default scrolling behaviour
      });
 
@@ -75,7 +89,7 @@ function generateRandomBoard() {
 
     newBoard[player.Y][player.X] = "P";
 
-    setCell(newBoard, 5, 5, "B")
+    
     
     return newBoard;
 }
@@ -106,6 +120,10 @@ function drawBoard(board){
             }
             else if (getCell(board, x, y) === 'B') {
                 cell.classList.add('bullet'); // 'B´on bullet
+                setTimeout(() => {
+                    setCell(board, x, y, ' ')
+                    drawBoard(board);
+                }, 500); // Ammus näkyy 500 ms
             }
 
 
@@ -220,4 +238,9 @@ class Ghost {
         this.X = x;
         this.Y = y;
     }
+}
+
+function shootAt(x, y){
+    setCell(board, x, y, 'B')
+    drawBoard(board);
 }
