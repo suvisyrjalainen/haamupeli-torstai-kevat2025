@@ -38,6 +38,8 @@ document.addEventListener('keydown', (event) => {
         shootAt(player.X + 1, player.Y);
       break;
       
+
+      
       }
 
      event.preventDefault(); // Prevent default scrolling behaviour
@@ -241,6 +243,25 @@ class Ghost {
 }
 
 function shootAt(x, y){
+
+    // Tarkistetaan, että ammus ei mene seinään
+    if (getCell(board, x, y) === 'W') {
+        return;
+    }
+
+    const ghostIndex = ghosts.findIndex(ghost => ghost.X === x && ghost.Y === y);
+    
+
+    if(ghostIndex !== -1){
+        ghosts.splice(ghostIndex,1);
+        console.log(ghosts)
+    }
+
+
     setCell(board, x, y, 'B')
     drawBoard(board);
+
+    if(ghosts.length === 0){
+        alert('Kaikki kummitukset voitettu!');
+    }
 }
