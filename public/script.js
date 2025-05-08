@@ -53,6 +53,10 @@ document.addEventListener('keydown', (event) => {
     board = generateRandomBoard();
     console.log(board);
 
+    setInterval(function() {
+        moveGhosts();
+    }, 1000);
+
     drawBoard(board);
     }
 
@@ -240,7 +244,43 @@ class Ghost {
         this.X = x;
         this.Y = y;
     }
+
+    moveGhostTowardsPlayer(player,board, oldGhosts){
+        let dx = player.X - this.X;
+        let dy = player.Y - this.Y;
+
+        console.log(dx, dy);
+
+        let moves = [];
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 0) moves.push({ x: this.X + 1, y: this.Y }); // Move right
+            else moves.push({ x: this.X - 1, y: this.Y }); // Move left
+            if (dy > 0) moves.push({ x: this.X, y: this.Y + 1 }); // Move down
+            else moves.push({ x: this.X, y: this.Y - 1 }); // Move up
+        } else {
+            if (dy > 0) moves.push({ x: this.X, y: this.Y + 1 }); // Move down
+            else moves.push({ x: this.X, y: this.Y - 1 }); // Move up
+            if (dx > 0) moves.push({ x: this.X + 1, y: this.Y }); // Move right
+            else moves.push({ x: this.X - 1, y: this.Y }); //  Move left
+        }
+
+        console.log(moves);
+
+        for (let move of moves) {
+            if (board[move.y][move.x] === ' ' || board[move.y][move.x] === 'P' &&
+              !oldGhosts.some(h => h.x === move.x && h.y === move.y)) // Tarkista, ettei haamu liiku toisen haamun päälle) 
+              { 
+                  return move;
+              }
+        }
+        // Jos kaikki pelaajaan päin suunnat ovat esteitä, pysy paikallaan
+        return { x: this.X, y: this.Y };       
+
+
+    }
 }
+
 
 function shootAt(x, y){
 
@@ -265,3 +305,33 @@ function shootAt(x, y){
         alert('Kaikki kummitukset voitettu!');
     }
 }
+
+function moveGhosts() {
+
+    // Säilytä haamujen vanhat paikat
+    const oldGhosts = ghosts.map(ghost => ({ x: ghost.X, y: ghost.Y }));
+    
+      ghosts.forEach(ghost => {
+        
+        const newPosition = ghost.moveGhostTowardsPlayer(player, board, oldGhosts);
+          
+          ghost.X = newPosition.x;
+          ghost.Y = newPosition.y;
+        
+          
+    
+          });
+    
+        // Tyhjennä vanhat haamujen paikat laudalta
+        oldGhosts.forEach(ghost => {
+          board[ghost.y][ghost.x] = ' '; // Clear old ghost position
+        });
+    
+        // Update the board with new ghost positions
+        ghosts.forEach(ghost => {
+            board[ghost.Y][ghost.X] = 'G';
+        });
+    
+    // Redraw the board to reflect ghost movement
+    drawBoard(board);
+    }
