@@ -55,7 +55,7 @@ document.addEventListener('keydown', (event) => {
 
     setInterval(function() {
         moveGhosts();
-    }, 1000);
+    }, 2000);
 
     drawBoard(board);
     }
@@ -269,7 +269,7 @@ class Ghost {
 
         for (let move of moves) {
             if (board[move.y][move.x] === ' ' || board[move.y][move.x] === 'P' &&
-              !oldGhosts.some(h => h.x === move.x && h.y === move.y)) // Tarkista, ettei haamu liiku toisen haamun päälle) 
+              !oldGhosts.some(h => h.x === move.x && h.y === move.y) && board[move.y][move.x] !== 'H') // Tarkista, ettei haamu liiku toisen haamun päälle) 
               { 
                   return move;
               }
@@ -310,6 +310,8 @@ function moveGhosts() {
 
     // Säilytä haamujen vanhat paikat
     const oldGhosts = ghosts.map(ghost => ({ x: ghost.X, y: ghost.Y }));
+
+    console.log(oldGhosts)
     
       ghosts.forEach(ghost => {
         
@@ -318,20 +320,23 @@ function moveGhosts() {
           ghost.X = newPosition.x;
           ghost.Y = newPosition.y;
         
-          
+          board[ghost.Y][ghost.X] = 'H';
     
-          });
+        });
+        
+        console.log(ghosts)
     
         // Tyhjennä vanhat haamujen paikat laudalta
         oldGhosts.forEach(ghost => {
-          board[ghost.y][ghost.x] = ' '; // Clear old ghost position
+          board[ghost.y][ghost.x]= ' '; // Clear old ghost position
         });
     
         // Update the board with new ghost positions
         ghosts.forEach(ghost => {
-            board[ghost.Y][ghost.X] = 'G';
+            board[ghost.Y][ghost.X] = 'H';
         });
     
     // Redraw the board to reflect ghost movement
     drawBoard(board);
     }
+
