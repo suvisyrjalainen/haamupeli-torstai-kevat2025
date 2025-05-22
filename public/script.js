@@ -10,8 +10,10 @@ let playerY;
 let ghosts = [];
 
 let ghostInterval;
+let ghostSpeed = 2000;
 
 let score = 0;
+
 
 
 
@@ -60,9 +62,8 @@ document.addEventListener('keydown', (event) => {
     score = 0;
     updateScoreBoard(0);
 
-    ghostInterval = setInterval(function() {
-        moveGhosts();
-    }, 2000);
+    ghostInterval = setInterval(moveGhosts, ghostSpeed);
+   
 
     drawBoard(board);
     }
@@ -310,7 +311,7 @@ function shootAt(x, y){
     drawBoard(board);
 
     if(ghosts.length === 0){
-        alert('Kaikki kummitukset voitettu!');
+       startNextLevel();
     }
 }
 
@@ -328,13 +329,14 @@ function moveGhosts() {
           ghost.X = newPosition.x;
           ghost.Y = newPosition.y;
         
-          board[ghost.Y][ghost.X] = 'H';
 
           // Check if ghost touches the player
           if (ghost.X === player.X && ghost.Y === player.Y) {
             endGame() // End the game
             return;
           }
+
+          board[ghost.Y][ghost.X] = 'H';
     
         });
         
@@ -370,3 +372,21 @@ function updateScoreBoard(points) {
     score = score + points;
     scoreBoard.textContent = `Pisteet: ${score}`;
 }
+
+function startNextLevel() {
+    alert('Level Up! Haamujen nopeus kasvaa.');
+  
+    // Generoi uusi pelikenttä
+    board = generateRandomBoard();
+    drawBoard(board);
+  
+    ghostSpeed = ghostSpeed * 0.9;
+  
+    // Pysäytä vanha intervalli ja käynnistä uusi nopeammin
+    clearInterval(ghostInterval);
+  
+     //Haamut alkavat liikkumaan sekunnin päästä startin painamisesta
+     
+    ghostInterval = setInterval(moveGhosts, ghostSpeed)
+    
+  }
