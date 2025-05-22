@@ -9,6 +9,10 @@ let playerY;
 
 let ghosts = [];
 
+let ghostInterval;
+
+let score = 0;
+
 
 
 document.addEventListener('keydown', (event) => {
@@ -53,7 +57,10 @@ document.addEventListener('keydown', (event) => {
     board = generateRandomBoard();
     console.log(board);
 
-    setInterval(function() {
+    score = 0;
+    updateScoreBoard(0);
+
+    ghostInterval = setInterval(function() {
         moveGhosts();
     }, 2000);
 
@@ -294,7 +301,8 @@ function shootAt(x, y){
 
     if(ghostIndex !== -1){
         ghosts.splice(ghostIndex,1);
-        console.log(ghosts)
+        updateScoreBoard(50);
+        
     }
 
 
@@ -321,6 +329,12 @@ function moveGhosts() {
           ghost.Y = newPosition.y;
         
           board[ghost.Y][ghost.X] = 'H';
+
+          // Check if ghost touches the player
+          if (ghost.X === player.X && ghost.Y === player.Y) {
+            endGame() // End the game
+            return;
+          }
     
         });
         
@@ -340,3 +354,19 @@ function moveGhosts() {
     drawBoard(board);
     }
 
+
+function endGame() {
+        alert('Game Over! The ghost caught you!');
+         // Show intro-view ja hide game-view
+        ghosts = []; // Tyhjennetään haamut
+        clearInterval(ghostInterval);
+        document.getElementById('intro-screen').style.display = 'block';
+        document.getElementById('game-screen').style.display = 'none';
+      
+}
+
+function updateScoreBoard(points) {
+    const scoreBoard = document.getElementById('pisteet');
+    score = score + points;
+    scoreBoard.textContent = `Pisteet: ${score}`;
+}
